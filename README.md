@@ -21,9 +21,10 @@ https://github.com/cliffparnitzky/EfgMemberSelect/issues
 Insert tags
 -----------
 
-Provides all known insert tags to get information of the actual logged member (replace `user` with `formmember::<FORM-FIELD-NAME>` !) of this [listing](http://contao.org/en/insert-tags.html#user-properties).
+Provides all known insert tags to get information of a member as listed [here](http://contao.org/en/insert-tags.html#user-properties) (replace `user` with `formmember::<FORM-FIELD-NAME>` !) .
 
-**Important note:** the members id will be read from `POST` (musst be form method) via `<FORM-FIELD-NAME>`. There will be a sulution to use `GET` soon.
+**Important note:**
+The members id will be read from `$_POST` (form method has to be `post`) via `<FORM-FIELD-NAME>`. There will be a solution to use `$_GET` soon.
 
 ### Known insert tags are:
 
@@ -62,7 +63,7 @@ Provides all known insert tags to get information of the actual logged member (r
 {{formmember::<FORM-FIELD-NAME>::welcoming::personally}} ... This tag will be replaced with a personally welcoming (`Dear`) for the currently logged in user.
 ~~~~
 
-### Improvements are
+### Additional information
 
 - For properties with regular expression of `date` / `time` / `datim` (defined in eval array of DCA config) a custom dateformat could be set (e.g. `{{formmember::<FORM-FIELD-NAME>::dateOfBirth::d. M Y}}` will be replaced with `14. Nov 1991`). If no custom format was found, the systems default will be used.
 - For properties of datatype `array` and existing foreign key (defined in DCA config) the text values will be read from database (e.g. `{{formmember::<FORM-FIELD-NAME>::groups}}` will be replaced with `Piano Students, Violin Students`).
