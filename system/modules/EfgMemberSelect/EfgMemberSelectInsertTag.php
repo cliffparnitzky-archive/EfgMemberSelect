@@ -55,16 +55,23 @@ class EfgMemberSelectInsertTag extends Controller
 			$attributeIndex = 2;
 
 			$ids = array();
-			if (!is_null($this->Input->post($formFieldName))) {
-				if (is_array($this->Input->post($formFieldName))) {
-					foreach ($this->Input->post($formFieldName) as $id) {
+			// at first we check $_POST, for parameter
+			$formParam = $this->Input->post($formFieldName);
+			if (is_null($formParam)) {
+				// nothing was found in $_POST, maybe we find something in $_GET
+				$formParam = $this->Input->get($formFieldName);
+			}
+			
+			if (!is_null($formParam)) {
+				if (is_array($formParam)) {
+					foreach ($formParam as $id) {
 						if (is_numeric($id)) {
 							$ids[] = $id;
 						}
 					}
 				} else {
-					if (is_numeric($this->Input->post($formFieldName))) {
-							$ids[] = $this->Input->post($formFieldName);
+					if (is_numeric($formParam)) {
+							$ids[] = $formParam;
 					}
 				}
 			}
