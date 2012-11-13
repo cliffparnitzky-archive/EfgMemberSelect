@@ -26,6 +26,12 @@ Compatibility
 - max. version: Contao 2.11.6
 
 
+Dependency
+----------
+
+- This extension is dependent on the following extensions: [[associategroups]](http://contao.org/de/extension-list/view/associategroups.de.html)
+
+
 Insert tags
 -----------
 
