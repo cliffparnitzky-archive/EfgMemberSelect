@@ -12,9 +12,11 @@
 -- 
 
 CREATE TABLE `tl_form_field` (
-  `memberGroups` blob NULL,
-  `includeBlankOption` char(1) NOT NULL default '',
-  `blankOptionLabel` varchar(128) NOT NULL default '',
-  `outputFormat` varchar(30) NOT NULL default '',
-  `returnValue` varchar(4) NOT NULL default ''
+  `efgMemberSelectMemberGroups` blob NULL,
+  `efgMemberSelectIncludeBlankOption` char(1) NOT NULL default '',
+  `efgMemberSelectBlankOptionLabel` varchar(128) NOT NULL default '',
+  `efgMemberSelectOutputFormat` varchar(32) NOT NULL default '',
+  `efgMemberSelectReturnValue` varchar(32) NOT NULL default '',
+  `efgMemberSelectRemoveLoggedMember` char(1) NOT NULL default '',
+  `efgMemberSelectShowInactiveMembers` char(1) NOT NULL default ''
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

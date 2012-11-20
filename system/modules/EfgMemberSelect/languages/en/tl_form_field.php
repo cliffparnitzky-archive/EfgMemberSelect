@@ -36,14 +36,21 @@ $GLOBALS['TL_LANG']['FFL']['efgMemberSelect'] = array('Member Select-Menu', 'Pro
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_form_field']['memberGroups']                                         = array('Membergroups', 'Please select the membergroup(s). Members that are in several groups, will be listed only once.');
-$GLOBALS['TL_LANG']['tl_form_field']['includeBlankOption']                                   = array('Blank option', 'Please select if a blank option must be added to the options array of hte drop-down menu.');
-$GLOBALS['TL_LANG']['tl_form_field']['blankOptionLabel']                                     = array('Blank option label', 'Please select a label for the blank option.');
-$GLOBALS['TL_LANG']['tl_form_field']['outputFormat']                                         = array('Outputformat', 'Please select the output format. This will be used in frontend and, if selected, for the return value <b>Member-Name</b>.');
-$GLOBALS['TL_LANG']['tl_form_field']['outputFormatOption']['FIRSTNAME_BLANK_LASTNAME']       = 'Firstname Lastname';
-$GLOBALS['TL_LANG']['tl_form_field']['outputFormatOption']['LASTNAME_COMMA_BLANK_FIRSTNAME'] = 'Lastname, Firstname';
-$GLOBALS['TL_LANG']['tl_form_field']['returnValue']                                          = array('Return value', 'Please select the value to be returned. This will be used e.g. in emails or for storing in the database. The format for <b>Member-Name</b> matches the selected <i>Outputformat</i>.');
-$GLOBALS['TL_LANG']['tl_form_field']['returnValueOption']['ID']                              = 'Member-ID';
-$GLOBALS['TL_LANG']['tl_form_field']['returnValueOption']['NAME']                            = 'Member-Name';
+$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectMemberGroups']        = array('Membergroups', 'Please select the membergroup(s). Members that are in several groups, will be listed only once.');
+$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectIncludeBlankOption']  = array('Blank option', 'Please select if a blank option must be added to the options array of hte drop-down menu.');
+$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectBlankOptionLabel']    = array('Blank option label', 'Please select a label for the blank option.');
+$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectOutputFormat']        = array('Outputformat', 'Please select the output format. This will be used in frontend and, if selected, for the return value <b>Member-Name</b>.');
+$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectReturnValue']         = array('Return value', 'Please select the value to be returned. This will be used e.g. in emails or for storing in the database. The format for <b>Member-Name</b> matches the selected <i>Outputformat</i>.');
+$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectRemoveLoggedMember']  = array('Remove logged member', 'Please select if the currently logged member should be removed from the options list.');
+$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectShowInactiveMembers'] = array('Show inactive members', 'Please select if incative members should be displayed in the options list.');
+
+/**
+ * Options
+ */
+$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectOutputFormatOption'][FormMemberSelectMenu::OUTPUT_FORMAT_FIRSTNAME_BLANK_LASTNAME]       = 'Firstname Lastname';
+$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectOutputFormatOption'][FormMemberSelectMenu::OUTPUT_FORMAT_LASTNAME_COMMA_BLANK_FIRSTNAME] = 'Lastname, Firstname';
+
+$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectReturnValueOption'][FormMemberSelectMenu::RETURN_VALUE_ID]   = 'Member-ID';
+$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectReturnValueOption'][FormMemberSelectMenu::RETURN_VALUE_NAME] = 'Member-Name';
 
 ?>

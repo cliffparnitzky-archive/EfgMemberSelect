@@ -31,56 +31,70 @@
 /**
  * Add a palette to tl_form_field
  */
-$GLOBALS['TL_DCA']['tl_form_field']['palettes']['__selector__'][] = 'includeBlankOption';
-$GLOBALS['TL_DCA']['tl_form_field']['palettes']['efgMemberSelect'] = '{type_legend},type,name,label;{options_legend},memberGroups,includeBlankOption,outputFormat,returnValue;{fconfig_legend},mandatory,multiple;{expert_legend:hide},class,accesskey;{submit_legend},addSubmit';
-$GLOBALS['TL_DCA']['tl_form_field']['subpalettes']['includeBlankOption'] = 'blankOptionLabel';
+$GLOBALS['TL_DCA']['tl_form_field']['palettes']['__selector__'][] = 'efgMemberSelectIncludeBlankOption';
+$GLOBALS['TL_DCA']['tl_form_field']['palettes']['efgMemberSelect'] = '{type_legend},type,name,label;{options_legend},efgMemberSelectMemberGroups,efgMemberSelectIncludeBlankOption,efgMemberSelectOutputFormat,efgMemberSelectReturnValue,efgMemberSelectRemoveLoggedMember,efgMemberSelectShowInactiveMembers;{fconfig_legend},mandatory,multiple;{expert_legend:hide},class,accesskey;{submit_legend},addSubmit';
+$GLOBALS['TL_DCA']['tl_form_field']['subpalettes']['efgMemberSelectIncludeBlankOption'] = 'efgMemberSelectBlankOptionLabel';
 
 /**
  * Add fields to tl_form_field
  */
-$GLOBALS['TL_DCA']['tl_form_field']['fields']['memberGroups'] = array
+$GLOBALS['TL_DCA']['tl_form_field']['fields']['efgMemberSelectMemberGroups'] = array
 (
-	'label'      => &$GLOBALS['TL_LANG']['tl_form_field']['memberGroups'],
+	'label'      => &$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectMemberGroups'],
 	'exclude'    => true,
 	'inputType'  => 'checkbox',
 	'foreignKey' => 'tl_member_group.name',
 	'eval'       => array('mandatory'=>true, 'multiple'=>true)
 );
-$GLOBALS['TL_DCA']['tl_form_field']['fields']['includeBlankOption'] = array
+$GLOBALS['TL_DCA']['tl_form_field']['fields']['efgMemberSelectIncludeBlankOption'] = array
 (
-	'label'      => &$GLOBALS['TL_LANG']['tl_form_field']['includeBlankOption'],
+	'label'      => &$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectIncludeBlankOption'],
 	'exclude'    => true,
 	'inputType'  => 'checkbox',
-	'eval'       => array('tl_class'=>'w50', 'submitOnChange'=>'true')
+	'eval'       => array('tl_class'=>'w50 m12 clr', 'submitOnChange'=>'true')
 );
-$GLOBALS['TL_DCA']['tl_form_field']['fields']['blankOptionLabel'] = array
+$GLOBALS['TL_DCA']['tl_form_field']['fields']['efgMemberSelectBlankOptionLabel'] = array
 (
-	'label'      => &$GLOBALS['TL_LANG']['tl_form_field']['blankOptionLabel'],
+	'label'      => &$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectBlankOptionLabel'],
 	'exclude'    => true,
 	'inputType'  => 'text',
 	'eval'       => array('tl_class'=>'w50')
 );
-$GLOBALS['TL_DCA']['tl_form_field']['fields']['outputFormat'] = array
+$GLOBALS['TL_DCA']['tl_form_field']['fields']['efgMemberSelectOutputFormat'] = array
 (
-	'label'     => &$GLOBALS['TL_LANG']['tl_form_field']['outputFormat'],
+	'label'     => &$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectOutputFormat'],
 	'exclude'   => true,
 	'inputType' => 'select',
 	'options'   => array(
-												'FIRSTNAME_BLANK_LASTNAME' => &$GLOBALS['TL_LANG']['tl_form_field']['outputFormatOption']['FIRSTNAME_BLANK_LASTNAME'],
-												'LASTNAME_COMMA_BLANK_FIRSTNAME' => &$GLOBALS['TL_LANG']['tl_form_field']['outputFormatOption']['LASTNAME_COMMA_BLANK_FIRSTNAME']
+												FormMemberSelectMenu::OUTPUT_FORMAT_FIRSTNAME_BLANK_LASTNAME => &$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectOutputFormatOption'][FormMemberSelectMenu::OUTPUT_FORMAT_FIRSTNAME_BLANK_LASTNAME],
+												FormMemberSelectMenu::OUTPUT_FORMAT_LASTNAME_COMMA_BLANK_FIRSTNAME => &$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectOutputFormatOption'][FormMemberSelectMenu::OUTPUT_FORMAT_LASTNAME_COMMA_BLANK_FIRSTNAME]
 							 				),
 	'eval'      => array('multiple'=>false, 'tl_class'=>'w50 clr')
 );
-$GLOBALS['TL_DCA']['tl_form_field']['fields']['returnValue'] = array
+$GLOBALS['TL_DCA']['tl_form_field']['fields']['efgMemberSelectReturnValue'] = array
 (
-	'label'     => &$GLOBALS['TL_LANG']['tl_form_field']['returnValue'],
+	'label'     => &$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectReturnValue'],
 	'exclude'   => true,
 	'inputType' => 'select',
 	'options'   => array(
-												'ID' => &$GLOBALS['TL_LANG']['tl_form_field']['returnValueOption']['ID'],
-												'NAME' => &$GLOBALS['TL_LANG']['tl_form_field']['returnValueOption']['NAME']
+												FormMemberSelectMenu::RETURN_VALUE_ID => &$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectReturnValueOption'][FormMemberSelectMenu::RETURN_VALUE_ID],
+												FormMemberSelectMenu::RETURN_VALUE_NAME => &$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectReturnValueOption'][FormMemberSelectMenu::RETURN_VALUE_NAME]
 											),
 	'eval'      => array('multiple'=>false, 'tl_class'=>'w50')
+);
+$GLOBALS['TL_DCA']['tl_form_field']['fields']['efgMemberSelectRemoveLoggedMember'] = array
+(
+	'label'      => &$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectRemoveLoggedMember'],
+	'exclude'    => true,
+	'inputType'  => 'checkbox',
+	'eval'       => array('tl_class'=>'w50 clr m12')
+);
+$GLOBALS['TL_DCA']['tl_form_field']['fields']['efgMemberSelectShowInactiveMembers'] = array
+(
+	'label'      => &$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectShowInactiveMembers'],
+	'exclude'    => true,
+	'inputType'  => 'checkbox',
+	'eval'       => array('tl_class'=>'w50 m12')
 );
 
 ?>

@@ -30,12 +30,25 @@
 
 class FormMemberSelectMenu extends FormSelectMenu
 {
+	const OUTPUT_FORMAT_FIRSTNAME_BLANK_LASTNAME = 'FORMAT_FIRSTNAME_BLANK_LASTNAME';
+	const OUTPUT_FORMAT_LASTNAME_COMMA_BLANK_FIRSTNAME = 'LASTNAME_COMMA_BLANK_FIRSTNAME';
+	
+	const RETURN_VALUE_ID = 'ID';
+	const RETURN_VALUE_NAME = 'NAME';
+	
+	public function __construct($arrAttributes=false)
+	{
+		parent::__construct($arrAttributes);
+		$this->import('Database');
+		$this->import('FrontendUser', 'User');
+	}
+	
 	/**
 	 * Overwritten, to set widget template for BE List
 	 */
 	public function parse($arrAttributes=false)
 	{
-		if(TL_MODE == 'BE' && $this->memberGroups == null)
+		if(TL_MODE == 'BE' && $this->efgMemberSelectMemberGroups == null)
 		{
 			$this->strTemplate = 'be_widget';
 		}
@@ -47,7 +60,7 @@ class FormMemberSelectMenu extends FormSelectMenu
 	 */
 	public function generateWithError($blnSwitchOrder=false)
 	{
-		if(TL_MODE == 'BE' && $this->memberGroups == null)
+		if(TL_MODE == 'BE' && $this->efgMemberSelectMemberGroups == null)
 		{
 			$this->strClass .= (strlen($this->strClass) ? ' ' . $this->strClass : '') . 'tl_select';
 		}
@@ -66,24 +79,22 @@ class FormMemberSelectMenu extends FormSelectMenu
 			$this->log('EfgMemberSelect: Extension "associategroups" is required!', 'FormMemberSelectMenu generate()', TL_ERROR);
 			return false;
 		}
-
-		$this->import('Database');
 		
-		if(TL_MODE == 'BE' && $this->memberGroups == null)
+		if(TL_MODE == 'BE' && $this->efgMemberSelectMemberGroups == null)
 		{
-			$config = $this->Database->prepare("SELECT memberGroups, includeBlankOption, blankOptionLabel, outputFormat, returnValue "
-																	."FROM tl_form_field "
-																	."WHERE id = (SELECT ff_id FROM tl_formdata_details WHERE pid = ? AND ff_type = ? AND ff_name = ?)")
+			$config = $this->Database->prepare("SELECT * FROM tl_form_field WHERE id = (SELECT ff_id FROM tl_formdata_details WHERE pid = ? AND ff_type = ? AND ff_name = ?)")
 																->execute($this->currentRecord, $this->type, $this->name);
 																
-			$this->memberGroups = $config->memberGroups;
-			$this->includeBlankOption = $config->includeBlankOption;
-			$this->blankOptionLabel = $config->blankOptionLabel;
-			$this->outputFormat = $config->outputFormat;
-			$this->returnValue = $config->returnValue;
+			$this->efgMemberSelectMemberGroups = $config->efgMemberSelectMemberGroups;
+			$this->efgMemberSelectIncludeBlankOption = $config->efgMemberSelectIncludeBlankOption;
+			$this->efgMemberSelectBlankOptionLabel = $config->efgMemberSelectBlankOptionLabel;
+			$this->efgMemberSelectOutputFormat = $config->efgMemberSelectOutputFormat;
+			$this->efgMemberSelectReturnValue = $config->efgMemberSelectReturnValue;
+			$this->efgMemberSelectRemoveLoggedMember = $config->efgMemberSelectRemoveLoggedMember;
+			$this->efgMemberSelectShowInactiveMembers = $config->efgMemberSelectShowInactiveMembers;
 		}
 
-		$groups = deserialize($this->memberGroups);
+		$groups = deserialize($this->efgMemberSelectMemberGroups);
 		if (is_array($groups))
 		{
 			$groups = join(',',$groups);
@@ -95,7 +106,7 @@ class FormMemberSelectMenu extends FormSelectMenu
 
 		$orderBy = 'tl_member.firstname, tl_member.lastname';
 
-		if ($this->outputFormat == 'LASTNAME_COMMA_BLANK_FIRSTNAME')
+		if ($this->efgMemberSelectOutputFormat == FormMemberSelectMenu::OUTPUT_FORMAT_LASTNAME_COMMA_BLANK_FIRSTNAME)
 		{
 			$orderBy = 'tl_member.lastname, tl_member.firstname';
 		}
@@ -106,29 +117,39 @@ class FormMemberSelectMenu extends FormSelectMenu
 											."ORDER BY $orderBy")
 										->execute();
 										
-		if ($this->includeBlankOption)
+		if ($this->efgMemberSelectIncludeBlankOption)
 		{
 			$this->arrOptions[] = array
 			(
 				'value' => "",
-				'label' => specialchars($this->blankOptionLabel),
+				'label' => specialchars($this->efgMemberSelectBlankOptionLabel),
 			);
 		}
 
 		while ($members->next())
 		{
-			// Add member if active
-			if ($this->isMemberActive($members))
+			$addMember = true;
+			
+			if ($this->efgMemberSelectRemoveLoggedMember && $this->User->id == $members->id) {
+				$addMember = false;
+			}
+			
+			if (!$this->efgMemberSelectShowInactiveMembers && !$this->isMemberActive($members)) {
+				$addMember = false;
+			}
+			
+			// Add member
+			if ($addMember)
 			{
 				$value = $members->id;
 				$label = $members->firstname . " " . $members->lastname;
 
-				if ($this->outputFormat == 'LASTNAME_COMMA_BLANK_FIRSTNAME')
+				if ($this->efgMemberSelectOutputFormat == FormMemberSelectMenu::OUTPUT_FORMAT_LASTNAME_COMMA_BLANK_FIRSTNAME)
 				{
 					$label = $members->lastname . ", " . $members->firstname;
 				}
 
-				if ($this->returnValue == 'NAME')
+				if ($this->efgMemberSelectReturnValue == FormMemberSelectMenu::RETURN_VALUE_NAME)
 				{
 					$value = $label;
 				}
