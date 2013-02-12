@@ -65,16 +65,10 @@ class FormMemberHiddenField extends FormHidden {
 			$groupIds = '-1';
 		}
 
-		$orderBy = 'tl_member.firstname, tl_member.lastname';
-
-		if ($this->efgMemberSelectOutputFormat == FormMemberSelectMenu::OUTPUT_FORMAT_LASTNAME_COMMA_BLANK_FIRSTNAME) {
-			$orderBy = 'tl_member.lastname, tl_member.firstname';
-		}
-
 		$members = $this->Database->prepare("SELECT DISTINCT tl_member.* "
 											."FROM tl_member, tl_member_to_group "
 											."WHERE tl_member.id IN ($memberIds) OR (tl_member_to_group.member_id = tl_member.id AND tl_member_to_group.group_id IN ($groupIds)) "
-											."ORDER BY $orderBy")
+											."ORDER BY tl_member.firstname, tl_member.lastname")
 										->execute();
 										
 		$hiddenFields = "";
@@ -103,34 +97,6 @@ class FormMemberHiddenField extends FormHidden {
 		}
 		return $hiddenFields;
 	}
-	
-	/**
-	 * Generate the widget and return it as string
-	 * @return string
-	 */
-	/*public function generate() {
-		if(TL_MODE == 'BE') {
-			// there is no config, e.g. in [efg]
-			$config = $this->Database->prepare("SELECT * FROM tl_form_field WHERE id = (SELECT ff_id FROM tl_formdata_details WHERE pid = ? AND ff_type = ? AND ff_name = ?)")
-																->execute($this->currentRecord, $this->type, $this->name);
-																
-			$this->efgMemberSelectMembers = $config->efgMemberSelectMembers;
-			$this->efgMemberSelectMemberGroups = $config->efgMemberSelectMemberGroups;
-			$this->efgMemberSelectIncludeBlankOption = $config->efgMemberSelectIncludeBlankOption;
-			$this->efgMemberSelectBlankOptionLabel = $config->efgMemberSelectBlankOptionLabel;
-			$this->efgMemberSelectOutputFormat = $config->efgMemberSelectOutputFormat;
-			$this->efgMemberSelectReturnValue = $config->efgMemberSelectReturnValue;
-			$this->efgMemberSelectRemoveLoggedMember = $config->efgMemberSelectRemoveLoggedMember;
-			$this->efgMemberSelectShowInactiveMembers = $config->efgMemberSelectShowInactiveMembers;
-			
-			$this->setMembers();
-		}
-		
-		if (TL_MODE == 'FE') {
-			$this->varValue = deserialize($this->varValue);
-		}
-		return parent::generate();
-	}*/
 
 	/**
 	 * Checks if the member is active.
