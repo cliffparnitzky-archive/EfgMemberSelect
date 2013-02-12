@@ -28,14 +28,8 @@
  * @filesource
  */
 
-class FormMemberSelectMenu extends FormSelectMenu {
+class FormMemberHiddenField extends FormHidden {
 
-	const OUTPUT_FORMAT_FIRSTNAME_BLANK_LASTNAME = 'FORMAT_FIRSTNAME_BLANK_LASTNAME';
-	const OUTPUT_FORMAT_LASTNAME_COMMA_BLANK_FIRSTNAME = 'LASTNAME_COMMA_BLANK_FIRSTNAME';
-	
-	const RETURN_VALUE_ID = 'ID';
-	const RETURN_VALUE_NAME = 'NAME';
-	
 	public function __construct($arrAttributes=false) {
 		parent::__construct($arrAttributes);
 		$this->import('Database');
@@ -46,14 +40,15 @@ class FormMemberSelectMenu extends FormSelectMenu {
 			$this->log('EfgMemberSelect: Extension [associategroups] is necessary!', 'FormMemberSelectMenu generate()', TL_ERROR);
 			$this->addError('Extension [associategroups] is necessary!');
 		} else if ($this->efgMemberSelectMembers != null || $this->efgMemberSelectMemberGroups != null) {
-			$this->setMemberOptions();
+			$this->generate();
 		}
 	}
 	
 	/**
-	 * Setting the options array
+	 * Generate the widget and return it as string
+	 * @return string
 	 */
-	private function setMemberOptions () {
+	public function generate () {
 		$memberIds = deserialize($this->efgMemberSelectMembers);
 		if (is_array($memberIds)) {
 			$memberIds = join(',',$memberIds);
@@ -82,13 +77,8 @@ class FormMemberSelectMenu extends FormSelectMenu {
 											."ORDER BY $orderBy")
 										->execute();
 										
-		if ($this->efgMemberSelectIncludeBlankOption) {
-			$this->arrOptions[] = array
-			(
-				'value' => "",
-				'label' => specialchars($this->efgMemberSelectBlankOptionLabel),
-			);
-		}
+		$hiddenFields = "";
+		$backendOutput = array();
 
 		while ($members->next()) {
 			$addMember = true;
@@ -103,54 +93,23 @@ class FormMemberSelectMenu extends FormSelectMenu {
 			
 			// Add member
 			if ($addMember) {
-				$value = $members->id;
-				$label = $members->firstname . " " . $members->lastname;
-
-				if ($this->efgMemberSelectOutputFormat == FormMemberSelectMenu::OUTPUT_FORMAT_LASTNAME_COMMA_BLANK_FIRSTNAME)
-				{
-					$label = $members->lastname . ", " . $members->firstname;
-				}
-
-				if ($this->efgMemberSelectReturnValue == FormMemberSelectMenu::RETURN_VALUE_NAME)
-				{
-					$value = $label;
-				}
-
-				$this->arrOptions[] = array
-				(
-					'value' => $value,
-					'label' => $label,
-				);
+				$this->varValue = $members->id;
+				$hiddenFields .= parent::generate();
+				$backendOutput[] = $members->firstname . " " . $members->lastname;
 			}
 		}
-	}
-	
-	/**
-	 * Overwritten, to set widget template for BE List
-	 */
-	public function parse($arrAttributes=false) {
-		if(TL_MODE == 'BE' && ($this->efgMemberSelectMembers == null || $this->efgMemberSelectMemberGroups)) {
-			$this->strTemplate = 'be_widget';
+		if(TL_MODE == 'BE') {
+			$this->varValue = "<ul><li>" . implode("</li><li>", $backendOutput) . "</li></ul>";
 		}
-		return parent::parse($arrAttributes); 
-	}
-	
-	/**
-	 * Overwritten, to set class attribute
-	 */
-	public function generateWithError($blnSwitchOrder=false) {
-		if(TL_MODE == 'BE' && ($this->efgMemberSelectMembers == null || $this->efgMemberSelectMemberGroups)) {
-			$this->strClass .= (strlen($this->strClass) ? ' ' . $this->strClass : '') . 'tl_select';
-		}
-		return parent::generateWithError($blnSwitchOrder); 
+		return $hiddenFields;
 	}
 	
 	/**
 	 * Generate the widget and return it as string
 	 * @return string
 	 */
-	public function generate() {
-		if(TL_MODE == 'BE' && ($this->efgMemberSelectMembers == null || $this->efgMemberSelectMemberGroups)) {
+	/*public function generate() {
+		if(TL_MODE == 'BE') {
 			// there is no config, e.g. in [efg]
 			$config = $this->Database->prepare("SELECT * FROM tl_form_field WHERE id = (SELECT ff_id FROM tl_formdata_details WHERE pid = ? AND ff_type = ? AND ff_name = ?)")
 																->execute($this->currentRecord, $this->type, $this->name);
@@ -164,14 +123,14 @@ class FormMemberSelectMenu extends FormSelectMenu {
 			$this->efgMemberSelectRemoveLoggedMember = $config->efgMemberSelectRemoveLoggedMember;
 			$this->efgMemberSelectShowInactiveMembers = $config->efgMemberSelectShowInactiveMembers;
 			
-			$this->setMemberOptions();
+			$this->setMembers();
 		}
 		
 		if (TL_MODE == 'FE') {
 			$this->varValue = deserialize($this->varValue);
 		}
 		return parent::generate();
-	}
+	}*/
 
 	/**
 	 * Checks if the member is active.

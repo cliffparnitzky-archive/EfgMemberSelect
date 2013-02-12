@@ -2,7 +2,7 @@
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2012 Leo Feyer
+ * Copyright (C) 2005-2013 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,7 +21,7 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2011-2012
+ * @copyright  Cliff Parnitzky 2011-2013
  * @author     Cliff Parnitzky
  * @package    EfgMemberSelect
  * @license    LGPL
@@ -32,11 +32,13 @@
  * Form fields
  */
 $GLOBALS['TL_LANG']['FFL']['efgMemberSelect'] = array('Member Select-Menu', 'Provides a Drop-Down-Menu for selecting members in a form.');
+$GLOBALS['TL_LANG']['FFL']['efgMemberHidden'] = array('Member Hidden Field', 'Provides a hidden field transferring members in a form.');
 
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectMemberGroups']        = array('Membergroups', 'Please select the membergroup(s). Members that are in several groups, will be listed only once.');
+$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectMembers']             = array('Members', 'Please select the members. Members that are also in groups, will be listed only once.');
+$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectMemberGroups']        = array('Membergroups', 'Please select the membergroups. Members that are in several groups, will be listed only once.');
 $GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectIncludeBlankOption']  = array('Blank option', 'Please select if a blank option must be added to the options array of hte drop-down menu.');
 $GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectBlankOptionLabel']    = array('Blank option label', 'Please select a label for the blank option.');
 $GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectOutputFormat']        = array('Outputformat', 'Please select the output format. This will be used in frontend and, if selected, for the return value <b>Member-Name</b>.');

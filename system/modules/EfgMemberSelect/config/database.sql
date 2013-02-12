@@ -12,6 +12,7 @@
 -- 
 
 CREATE TABLE `tl_form_field` (
+  `efgMemberSelectMembers` blob NULL,
   `efgMemberSelectMemberGroups` blob NULL,
   `efgMemberSelectIncludeBlankOption` char(1) NOT NULL default '',
   `efgMemberSelectBlankOptionLabel` varchar(128) NOT NULL default '',

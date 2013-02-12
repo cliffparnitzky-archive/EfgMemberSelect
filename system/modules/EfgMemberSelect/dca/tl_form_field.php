@@ -2,7 +2,7 @@
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2012 Leo Feyer
+ * Copyright (C) 2005-2013 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,7 +21,7 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2011-2012
+ * @copyright  Cliff Parnitzky 2011-2013
  * @author     Cliff Parnitzky
  * @package    EfgMemberSelect
  * @license    LGPL
@@ -32,19 +32,28 @@
  * Add a palette to tl_form_field
  */
 $GLOBALS['TL_DCA']['tl_form_field']['palettes']['__selector__'][] = 'efgMemberSelectIncludeBlankOption';
-$GLOBALS['TL_DCA']['tl_form_field']['palettes']['efgMemberSelect'] = '{type_legend},type,name,label;{options_legend},efgMemberSelectMemberGroups,efgMemberSelectIncludeBlankOption,efgMemberSelectOutputFormat,efgMemberSelectReturnValue,efgMemberSelectRemoveLoggedMember,efgMemberSelectShowInactiveMembers;{fconfig_legend},mandatory,multiple;{expert_legend:hide},class,accesskey;{submit_legend},addSubmit';
+$GLOBALS['TL_DCA']['tl_form_field']['palettes']['efgMemberSelect'] = '{type_legend},type,name,label;{options_legend},efgMemberSelectMembers,efgMemberSelectMemberGroups,efgMemberSelectIncludeBlankOption,efgMemberSelectOutputFormat,efgMemberSelectReturnValue,efgMemberSelectRemoveLoggedMember,efgMemberSelectShowInactiveMembers;{fconfig_legend},mandatory,multiple;{expert_legend:hide},class,accesskey;{submit_legend},addSubmit';
+$GLOBALS['TL_DCA']['tl_form_field']['palettes']['efgMemberHidden'] = '{type_legend},type,name,label;{options_legend},efgMemberSelectMembers,efgMemberSelectMemberGroups,efgMemberSelectRemoveLoggedMember,efgMemberSelectShowInactiveMembers;{submit_legend},addSubmit';
 $GLOBALS['TL_DCA']['tl_form_field']['subpalettes']['efgMemberSelectIncludeBlankOption'] = 'efgMemberSelectBlankOptionLabel';
 
 /**
  * Add fields to tl_form_field
  */
+$GLOBALS['TL_DCA']['tl_form_field']['fields']['efgMemberSelectMembers'] = array
+(
+	'label'      => &$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectMembers'],
+	'exclude'    => true,
+	'inputType'  => 'checkbox',
+	'foreignKey' => 'tl_member.CONCAT(firstname," ",lastname)',
+	'eval'       => array('mandatory'=>false, 'multiple'=>true)
+);
 $GLOBALS['TL_DCA']['tl_form_field']['fields']['efgMemberSelectMemberGroups'] = array
 (
 	'label'      => &$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectMemberGroups'],
 	'exclude'    => true,
 	'inputType'  => 'checkbox',
 	'foreignKey' => 'tl_member_group.name',
-	'eval'       => array('mandatory'=>true, 'multiple'=>true)
+	'eval'       => array('mandatory'=>false, 'multiple'=>true)
 );
 $GLOBALS['TL_DCA']['tl_form_field']['fields']['efgMemberSelectIncludeBlankOption'] = array
 (

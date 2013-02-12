@@ -2,7 +2,7 @@
 
 /**
  * Contao Open Source CMS
- * Copyright (C) 2005-2012 Leo Feyer
+ * Copyright (C) 2005-2013 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,7 +21,7 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  Cliff Parnitzky 2011-2012
+ * @copyright  Cliff Parnitzky 2011-2013
  * @author     Cliff Parnitzky
  * @package    EfgMemberSelect
  * @license    LGPL
@@ -32,7 +32,13 @@
  * Front end form fields
  */
 $GLOBALS['TL_FFL']['efgMemberSelect'] = 'FormMemberSelectMenu';
+$GLOBALS['TL_FFL']['efgMemberHidden'] = 'FormMemberHiddenField';
+
+/**
+ * Back end form fields
+ */
 $GLOBALS['BE_FFL']['efgMemberSelect'] = 'FormMemberSelectMenu';
+$GLOBALS['BE_FFL']['efgMemberHidden'] = 'FormMemberHiddenField';
 
 /**
  * Adding field type to storabel fields.
