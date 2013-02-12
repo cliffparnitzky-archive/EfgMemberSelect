@@ -33,7 +33,7 @@
  */
 $GLOBALS['TL_DCA']['tl_form_field']['palettes']['__selector__'][] = 'efgMemberSelectIncludeBlankOption';
 $GLOBALS['TL_DCA']['tl_form_field']['palettes']['efgMemberSelect'] = '{type_legend},type,name,label;{options_legend},efgMemberSelectMembers,efgMemberSelectMemberGroups,efgMemberSelectIncludeBlankOption,efgMemberSelectOutputFormat,efgMemberSelectReturnValue,efgMemberSelectRemoveLoggedMember,efgMemberSelectShowInactiveMembers;{fconfig_legend},mandatory,multiple;{expert_legend:hide},class,accesskey;{submit_legend},addSubmit';
-$GLOBALS['TL_DCA']['tl_form_field']['palettes']['efgMemberHidden'] = '{type_legend},type,name,label;{options_legend},efgMemberSelectMembers,efgMemberSelectMemberGroups,efgMemberSelectRemoveLoggedMember,efgMemberSelectShowInactiveMembers;{submit_legend},addSubmit';
+$GLOBALS['TL_DCA']['tl_form_field']['palettes']['efgMemberHidden'] = '{type_legend},type,name;{options_legend},efgMemberSelectMembers,efgMemberSelectMemberGroups,efgMemberSelectRemoveLoggedMember,efgMemberSelectShowInactiveMembers;{submit_legend},addSubmit';
 $GLOBALS['TL_DCA']['tl_form_field']['subpalettes']['efgMemberSelectIncludeBlankOption'] = 'efgMemberSelectBlankOptionLabel';
 
 /**
