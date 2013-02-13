@@ -87,8 +87,7 @@ class FormMemberHiddenField extends FormHidden {
 			
 			// Add member
 			if ($addMember) {
-				$this->varValue = $members->id;
-				$hiddenFields .= parent::generate();
+				$hiddenFields .= sprintf('<input type="hidden" name="%s[]" value="%s" />', $this->strName, specialchars($members->id));
 				$backendOutput[] = $members->firstname . " " . $members->lastname;
 			}
 		}
