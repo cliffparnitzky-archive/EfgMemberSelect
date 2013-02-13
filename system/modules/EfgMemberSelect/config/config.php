@@ -38,7 +38,6 @@ $GLOBALS['TL_FFL']['efgMemberHidden'] = 'FormMemberHiddenField';
  * Back end form fields
  */
 $GLOBALS['BE_FFL']['efgMemberSelect'] = 'FormMemberSelectMenu';
-$GLOBALS['BE_FFL']['efgMemberHidden'] = 'FormMemberHiddenField';
 
 /**
  * Adding field type to storabel fields.
