@@ -1,5 +1,5 @@
-Contao EfgMemberSelect Extension
-================================
+Contao Extension: EfgMemberSelect
+=================================
 
 Widget for form generator to select members.
 
@@ -23,7 +23,7 @@ Compatibility
 -------------
 
 - min. version: Contao 2.9.5
-- max. version: Contao 3.0.0
+- max. version: Contao 3.0.x
 
 
 Dependency
