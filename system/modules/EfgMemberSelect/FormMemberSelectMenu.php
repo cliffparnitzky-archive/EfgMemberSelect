@@ -152,19 +152,22 @@ class FormMemberSelectMenu extends FormSelectMenu {
 	public function generate() {
 		if(TL_MODE == 'BE' && ($this->efgMemberSelectMembers == null || $this->efgMemberSelectMemberGroups)) {
 			// there is no config, e.g. in [efg]
-			$config = $this->Database->prepare("SELECT * FROM tl_form_field WHERE id = (SELECT ff_id FROM tl_formdata_details WHERE pid = ? AND ff_type = ? AND ff_name = ?)")
-																->execute($this->currentRecord, $this->type, $this->name);
-																
-			$this->efgMemberSelectMembers = $config->efgMemberSelectMembers;
-			$this->efgMemberSelectMemberGroups = $config->efgMemberSelectMemberGroups;
-			$this->efgMemberSelectIncludeBlankOption = $config->efgMemberSelectIncludeBlankOption;
-			$this->efgMemberSelectBlankOptionLabel = $config->efgMemberSelectBlankOptionLabel;
-			$this->efgMemberSelectOutputFormat = $config->efgMemberSelectOutputFormat;
-			$this->efgMemberSelectReturnValue = $config->efgMemberSelectReturnValue;
-			$this->efgMemberSelectRemoveLoggedMember = $config->efgMemberSelectRemoveLoggedMember;
-			$this->efgMemberSelectShowInactiveMembers = $config->efgMemberSelectShowInactiveMembers;
-			
-			$this->setMemberOptions();
+			$fieldId = $GLOBALS['TL_DCA']['tl_formdata']['fields'][$this->name]['ff_id'];
+			if ($fieldId > 0)
+			{
+				$config = $this->Database->prepare("SELECT * FROM tl_form_field WHERE id = ?")->execute($fieldId);
+				
+				$this->efgMemberSelectMembers = $config->efgMemberSelectMembers;
+				$this->efgMemberSelectMemberGroups = $config->efgMemberSelectMemberGroups;
+				$this->efgMemberSelectIncludeBlankOption = $config->efgMemberSelectIncludeBlankOption;
+				$this->efgMemberSelectBlankOptionLabel = $config->efgMemberSelectBlankOptionLabel;
+				$this->efgMemberSelectOutputFormat = $config->efgMemberSelectOutputFormat;
+				$this->efgMemberSelectReturnValue = $config->efgMemberSelectReturnValue;
+				$this->efgMemberSelectRemoveLoggedMember = $config->efgMemberSelectRemoveLoggedMember;
+				$this->efgMemberSelectShowInactiveMembers = $config->efgMemberSelectShowInactiveMembers;
+				
+				$this->setMemberOptions();
+			}
 		}
 		
 		if (TL_MODE == 'FE') {
