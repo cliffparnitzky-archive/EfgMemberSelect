@@ -54,6 +54,37 @@ class FormMemberSelectMenu extends FormSelectMenu {
 	 * Setting the options array
 	 */
 	private function setMemberOptions () {
+		$arrValidMembers = $this->getValidMembers();
+		
+		if ($this->efgMemberSelectIncludeBlankOption) {
+			$this->arrOptions[] = array
+			(
+				'value' => "",
+				'label' => specialchars($this->efgMemberSelectBlankOptionLabel),
+			);
+		}
+
+		foreach ($arrValidMembers as $arrMember) {
+			$value = $arrMember['id'];
+			$label = $this->getMemberLabel($arrMember);
+
+			if ($this->efgMemberSelectReturnValue == FormMemberSelectMenu::RETURN_VALUE_NAME)
+			{
+				$value = $label;
+			}
+
+			$this->arrOptions[] = array
+			(
+				'value' => $value,
+				'label' => $label,
+			);
+		}
+	}
+	
+	/**
+	 * Get all valid members (depending on field configuration)
+	 */
+	private function getValidMembers() {
 		$memberIds = deserialize($this->efgMemberSelectMembers);
 		if (is_array($memberIds)) {
 			$memberIds = join(',',$memberIds);
@@ -76,53 +107,48 @@ class FormMemberSelectMenu extends FormSelectMenu {
 			$orderBy = 'tl_member.lastname, tl_member.firstname';
 		}
 
+		$validMembers = array();
 		$members = $this->Database->prepare("SELECT DISTINCT tl_member.* "
 											."FROM tl_member, tl_member_to_group "
 											."WHERE tl_member.id IN ($memberIds) OR (tl_member_to_group.member_id = tl_member.id AND tl_member_to_group.group_id IN ($groupIds)) "
 											."ORDER BY $orderBy")
 										->execute();
-										
-		if ($this->efgMemberSelectIncludeBlankOption) {
-			$this->arrOptions[] = array
-			(
-				'value' => "",
-				'label' => specialchars($this->efgMemberSelectBlankOptionLabel),
-			);
-		}
-
-		while ($members->next()) {
-			$addMember = true;
-			
-			if ($this->efgMemberSelectRemoveLoggedMember && $this->User->id == $members->id) {
-				$addMember = false;
-			}
-			
-			if (!$this->efgMemberSelectShowInactiveMembers && !$this->isMemberActive($members)) {
-				$addMember = false;
-			}
-			
-			// Add member
-			if ($addMember) {
-				$value = $members->id;
-				$label = $members->firstname . " " . $members->lastname;
-
-				if ($this->efgMemberSelectOutputFormat == FormMemberSelectMenu::OUTPUT_FORMAT_LASTNAME_COMMA_BLANK_FIRSTNAME)
-				{
-					$label = $members->lastname . ", " . $members->firstname;
+		
+		if ($members->numRows)
+		{
+			while ($arrMember = $members->fetchAssoc()) {
+				$addMember = true;
+				
+				if (TL_MODE == 'FE' && $this->efgMemberSelectRemoveLoggedMember && $this->User->id == $arrMember['id']) {
+					$addMember = false;
 				}
-
-				if ($this->efgMemberSelectReturnValue == FormMemberSelectMenu::RETURN_VALUE_NAME)
-				{
-					$value = $label;
+				
+				if (!$this->efgMemberSelectShowInactiveMembers && !$this->isMemberActive($arrMember)) {
+					$addMember = false;
 				}
-
-				$this->arrOptions[] = array
-				(
-					'value' => $value,
-					'label' => $label,
-				);
+				
+				// Add member
+				if ($addMember) {
+					$validMembers[] = $arrMember;
+				}
 			}
 		}
+		
+		return $validMembers;
+	}
+	
+	/**
+	 * Create the label for a member (depending on field configuration).
+	 */
+	private function getMemberLabel($arrMember) {
+		$label = $arrMember['firstname'] . " " . $arrMember['lastname'];
+
+		if ($this->efgMemberSelectOutputFormat == FormMemberSelectMenu::OUTPUT_FORMAT_LASTNAME_COMMA_BLANK_FIRSTNAME)
+		{
+			$label = $arrMember['lastname'] . ", " . $arrMember['firstname'];
+		}
+		
+		return $label;
 	}
 	
 	/**
@@ -152,22 +178,8 @@ class FormMemberSelectMenu extends FormSelectMenu {
 	public function generate() {
 		if(TL_MODE == 'BE' && ($this->efgMemberSelectMembers == null || $this->efgMemberSelectMemberGroups)) {
 			// there is no config, e.g. in [efg]
-			$fieldId = $GLOBALS['TL_DCA']['tl_formdata']['fields'][$this->name]['ff_id'];
-			if ($fieldId > 0)
-			{
-				$config = $this->Database->prepare("SELECT * FROM tl_form_field WHERE id = ?")->execute($fieldId);
-				
-				$this->efgMemberSelectMembers = $config->efgMemberSelectMembers;
-				$this->efgMemberSelectMemberGroups = $config->efgMemberSelectMemberGroups;
-				$this->efgMemberSelectIncludeBlankOption = $config->efgMemberSelectIncludeBlankOption;
-				$this->efgMemberSelectBlankOptionLabel = $config->efgMemberSelectBlankOptionLabel;
-				$this->efgMemberSelectOutputFormat = $config->efgMemberSelectOutputFormat;
-				$this->efgMemberSelectReturnValue = $config->efgMemberSelectReturnValue;
-				$this->efgMemberSelectRemoveLoggedMember = $config->efgMemberSelectRemoveLoggedMember;
-				$this->efgMemberSelectShowInactiveMembers = $config->efgMemberSelectShowInactiveMembers;
-				
-				$this->setMemberOptions();
-			}
+			$this->setFieldConfig();
+			$this->setMemberOptions();
 		}
 		
 		if (TL_MODE == 'FE') {
@@ -180,13 +192,55 @@ class FormMemberSelectMenu extends FormSelectMenu {
 	 * Checks if the member is active.
 	 * @return boolean
 	 */
-	private function isMemberActive($member) {
-		if ($member->disable ||
-			(strlen($member->start) > 0 && $member->start > time()) ||
-			(strlen($member->stop) > 0 && $member->stop < time())) {
+	private function isMemberActive($arrMember) {
+		if ($arrMember['disable'] ||
+			(strlen($member['start']) > 0 && $member['start'] > time()) ||
+			(strlen($member['stop']) > 0 && $member['stop'] < time())) {
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * Overwritten \Contao\Widget->isValidOption()
+	 */
+	protected function isValidOption($varInput) {
+		$this->setFieldConfig();
+		$arrValidMembers = $this->getValidMembers();
+		foreach ($arrValidMembers as $arrMember) {
+			$value = $arrMember['id'];
+			if ($this->efgMemberSelectReturnValue == FormMemberSelectMenu::RETURN_VALUE_NAME)
+			{
+				$value = $this->getMemberLabel($arrMember);
+			}
+			
+			if ($value == $varInput) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * There is no config, e.g. in [efg]
+	 */
+	private function setFieldConfig() {
+		$fieldId = $GLOBALS['TL_DCA']['tl_formdata']['fields'][$this->name]['ff_id'];
+		if ($fieldId > 0)
+		{
+			$config = $this->Database->prepare("SELECT * FROM tl_form_field WHERE id = ?")->execute($fieldId);
+			
+			$this->efgMemberSelectMembers = $config->efgMemberSelectMembers;
+			$this->efgMemberSelectMemberGroups = $config->efgMemberSelectMemberGroups;
+			$this->efgMemberSelectIncludeBlankOption = $config->efgMemberSelectIncludeBlankOption;
+			$this->efgMemberSelectBlankOptionLabel = $config->efgMemberSelectBlankOptionLabel;
+			$this->efgMemberSelectOutputFormat = $config->efgMemberSelectOutputFormat;
+			$this->efgMemberSelectReturnValue = $config->efgMemberSelectReturnValue;
+			$this->efgMemberSelectRemoveLoggedMember = $config->efgMemberSelectRemoveLoggedMember;
+			$this->efgMemberSelectShowInactiveMembers = $config->efgMemberSelectShowInactiveMembers;
+			
+		}
 	}
 }
 
