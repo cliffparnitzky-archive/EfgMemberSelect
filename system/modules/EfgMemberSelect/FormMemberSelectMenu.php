@@ -45,7 +45,8 @@ class FormMemberSelectMenu extends FormSelectMenu {
 		if (!in_array('associategroups', $this->Config->getActiveModules())) {
 			$this->log('EfgMemberSelect: Extension [associategroups] is necessary!', 'FormMemberSelectMenu generate()', TL_ERROR);
 			$this->addError('Extension [associategroups] is necessary!');
-		} else if ($this->efgMemberSelectMembers != null || $this->efgMemberSelectMemberGroups != null) {
+		} else {
+			$this->setFieldConfig();
 			$this->setMemberOptions();
 		}
 	}
@@ -54,6 +55,10 @@ class FormMemberSelectMenu extends FormSelectMenu {
 	 * Setting the options array
 	 */
 	private function setMemberOptions () {
+		if (!empty($this->arrOptions)) {
+			return;
+		}
+	
 		$arrValidMembers = $this->getValidMembers();
 		
 		if ($this->efgMemberSelectIncludeBlankOption) {
@@ -155,7 +160,7 @@ class FormMemberSelectMenu extends FormSelectMenu {
 	 * Overwritten, to set widget template for BE List
 	 */
 	public function parse($arrAttributes=false) {
-		if(TL_MODE == 'BE' && ($this->efgMemberSelectMembers == null || $this->efgMemberSelectMemberGroups)) {
+		if(TL_MODE == 'BE' && ($this->Input->get('act') == "edit" || $this->Input->get('act') == "editAll")) {
 			$this->strTemplate = 'be_widget';
 		}
 		return parent::parse($arrAttributes); 
@@ -165,7 +170,7 @@ class FormMemberSelectMenu extends FormSelectMenu {
 	 * Overwritten, to set class attribute
 	 */
 	public function generateWithError($blnSwitchOrder=false) {
-		if(TL_MODE == 'BE' && ($this->efgMemberSelectMembers == null || $this->efgMemberSelectMemberGroups)) {
+		if(TL_MODE == 'BE') {
 			$this->strClass .= (strlen($this->strClass) ? ' ' . $this->strClass : '') . 'tl_select';
 		}
 		return parent::generateWithError($blnSwitchOrder); 
@@ -176,14 +181,19 @@ class FormMemberSelectMenu extends FormSelectMenu {
 	 * @return string
 	 */
 	public function generate() {
-		if(TL_MODE == 'BE' && ($this->efgMemberSelectMembers == null || $this->efgMemberSelectMemberGroups)) {
+		if(TL_MODE == 'BE') {
 			// there is no config, e.g. in [efg]
 			$this->setFieldConfig();
 			$this->setMemberOptions();
+			if (is_array($this->varValue) && count($this->varValue) == 1) {
+				$this->varValue = deserialize($this->varValue[0]);
+			}
 		}
 		
 		if (TL_MODE == 'FE') {
-			$this->varValue = deserialize($this->varValue);
+			if ($GLOBALS['TL_DCA']['tl_formdata']['fields'][$this->name]['eval']['multiple'] && !is_array($this->varValue)) {
+				$this->varValue = trimsplit('[,|]', $this->varValue);
+			}
 		}
 		return parent::generate();
 	}
@@ -207,6 +217,13 @@ class FormMemberSelectMenu extends FormSelectMenu {
 	protected function isValidOption($varInput) {
 		$this->setFieldConfig();
 		$arrValidMembers = $this->getValidMembers();
+		
+		if (count($arrValidMembers) == 0) {
+			return false;
+		}
+		
+		$arrValidValues = array();
+		
 		foreach ($arrValidMembers as $arrMember) {
 			$value = $arrMember['id'];
 			if ($this->efgMemberSelectReturnValue == FormMemberSelectMenu::RETURN_VALUE_NAME)
@@ -214,19 +231,25 @@ class FormMemberSelectMenu extends FormSelectMenu {
 				$value = $this->getMemberLabel($arrMember);
 			}
 			
-			if ($value == $varInput) {
-				return true;
+			if (is_array($varInput)) {
+				if (in_array($value, $varInput)) {
+					$arrValidValues[] = $value;
+				}
+			} else {
+				if ($value == $varInput) {
+					return true;
+				}
 			}
 		}
 		
-		return false;
+		return count($arrValidValues) == count($varInput);
 	}
 	
 	/**
 	 * There is no config, e.g. in [efg]
 	 */
 	private function setFieldConfig() {
-		$fieldId = $GLOBALS['TL_DCA']['tl_formdata']['fields'][$this->name]['ff_id'];
+		$fieldId = $GLOBALS['TL_DCA']['tl_formdata']['fields'][$this->strField]['ff_id'];
 		if ($fieldId > 0)
 		{
 			$config = $this->Database->prepare("SELECT * FROM tl_form_field WHERE id = ?")->execute($fieldId);

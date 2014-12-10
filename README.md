@@ -22,14 +22,14 @@ https://github.com/cliffparnitzky/EfgMemberSelect/issues
 Compatibility
 -------------
 
-- min. version: Contao 2.9.5
-- max. version: Contao 3.1.x
+- min. version: Contao 3.0.0
+- max. version: Contao 3.4.x
 
 
 Dependency
 ----------
 
-- This extension is dependent on the following extensions: [[associategroups]](http://contao.org/de/extension-list/view/associategroups.de.html)
+- This extension is dependent on the following extensions: [[associategroups] >= 1.2.1](https://contao.org/de/extension-list/view/associategroups.10020019.de.html), [[efg] >= 2.2.1](https://contao.org/de/extension-list/view/efg.20020019.de.html)
 
 
 Insert tags
