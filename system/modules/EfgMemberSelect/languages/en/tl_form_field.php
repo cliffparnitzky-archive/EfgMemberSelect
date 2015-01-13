@@ -51,6 +51,7 @@ $GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectShowInactiveMembers'] = arr
  */
 $GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectOutputFormatOption'][FormMemberSelectMenu::OUTPUT_FORMAT_FIRSTNAME_BLANK_LASTNAME]       = 'Firstname Lastname';
 $GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectOutputFormatOption'][FormMemberSelectMenu::OUTPUT_FORMAT_LASTNAME_COMMA_BLANK_FIRSTNAME] = 'Lastname, Firstname';
+$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectOutputFormatOption'][FormMemberSelectMenu::OUTPUT_FORMAT_COMPANY] = 'Company (Firstname Lastname)';
 
 $GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectReturnValueOption'][FormMemberSelectMenu::RETURN_VALUE_ID]   = 'Member-ID';
 $GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectReturnValueOption'][FormMemberSelectMenu::RETURN_VALUE_NAME] = 'Member-Name';

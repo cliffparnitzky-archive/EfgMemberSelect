@@ -32,6 +32,7 @@ class FormMemberSelectMenu extends FormSelectMenu {
 
 	const OUTPUT_FORMAT_FIRSTNAME_BLANK_LASTNAME = 'FORMAT_FIRSTNAME_BLANK_LASTNAME';
 	const OUTPUT_FORMAT_LASTNAME_COMMA_BLANK_FIRSTNAME = 'LASTNAME_COMMA_BLANK_FIRSTNAME';
+	const OUTPUT_FORMAT_COMPANY = 'COMPANY';
 	
 	const RETURN_VALUE_ID = 'ID';
 	const RETURN_VALUE_NAME = 'NAME';
@@ -111,6 +112,9 @@ class FormMemberSelectMenu extends FormSelectMenu {
 		if ($this->efgMemberSelectOutputFormat == FormMemberSelectMenu::OUTPUT_FORMAT_LASTNAME_COMMA_BLANK_FIRSTNAME) {
 			$orderBy = 'tl_member.lastname, tl_member.firstname';
 		}
+		if ($this->efgMemberSelectOutputFormat == FormMemberSelectMenu::OUTPUT_FORMAT_COMPANY) {
+			$orderBy = 'tl_member.company, tl_member.lastname, tl_member.firstname';
+		}
 
 		$validMembers = array();
 		$members = $this->Database->prepare("SELECT DISTINCT tl_member.* "
@@ -151,6 +155,12 @@ class FormMemberSelectMenu extends FormSelectMenu {
 		if ($this->efgMemberSelectOutputFormat == FormMemberSelectMenu::OUTPUT_FORMAT_LASTNAME_COMMA_BLANK_FIRSTNAME)
 		{
 			$label = $arrMember['lastname'] . ", " . $arrMember['firstname'];
+		}
+
+		if ($this->efgMemberSelectOutputFormat == FormMemberSelectMenu::OUTPUT_FORMAT_COMPANY)
+		{
+			$hasname = ($arrMember['lastname']=!"" || $arrMember['firstname']!="");
+			$label = $arrMember['company'] . (($hasname) ? " (". $arrMember['firstname'] . " " . $arrMember['lastname'] . ")" : "");
 		}
 		
 		return $label;
