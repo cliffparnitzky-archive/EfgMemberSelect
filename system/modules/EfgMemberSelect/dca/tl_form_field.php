@@ -77,6 +77,7 @@ $GLOBALS['TL_DCA']['tl_form_field']['fields']['efgMemberSelectOutputFormat'] = a
 	'options'   => array(
 												FormMemberSelectMenu::OUTPUT_FORMAT_FIRSTNAME_BLANK_LASTNAME => &$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectOutputFormatOption'][FormMemberSelectMenu::OUTPUT_FORMAT_FIRSTNAME_BLANK_LASTNAME],
 												FormMemberSelectMenu::OUTPUT_FORMAT_LASTNAME_COMMA_BLANK_FIRSTNAME => &$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectOutputFormatOption'][FormMemberSelectMenu::OUTPUT_FORMAT_LASTNAME_COMMA_BLANK_FIRSTNAME]
+												FormMemberSelectMenu::OUTPUT_FORMAT_COMPANY => &$GLOBALS['TL_LANG']['tl_form_field']['efgMemberSelectOutputFormatOption'][FormMemberSelectMenu::OUTPUT_FORMAT_COMPANY]
 							 				),
 	'eval'      => array('multiple'=>false, 'tl_class'=>'w50 clr')
 );
